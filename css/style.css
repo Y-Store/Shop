@@ -354,3 +354,25 @@ a {
         width: auto; }
         .site-mobile-menu .site-nav-wrap[data-class="social"] > li:first-child a {
           padding-left: 15px !important; }
+          .about-us-section {
+            background-color: #f9f9f9;
+            color: #343a40;
+          }
+          
+          .about-heading {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #007bff;
+          }
+          
+          .about-text {
+            font-size: 1rem;
+            color: #666;
+            line-height: 1.8;
+          }
+          
+          .rounded-image {
+            border-radius: 15px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+          }
+          
