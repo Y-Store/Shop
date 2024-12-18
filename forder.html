@@ -9,7 +9,7 @@
 <body>
     <div class="order-container">
         <h2 class="text-center mb-4">Fortnite Order Form</h2>
-        <form>
+        <form name="submit-to-google-sheet">
           <div class="form-checklist">
             <label><input type="checkbox" value="380" class="item"> 1000 VB = 380 EGP</label><br>
             <label><input type="checkbox" value="895" class="item"> 2800 VB = 895 EGP</label><br>
@@ -46,7 +46,7 @@
           </p>
           <button type="submit" class="btn btn-primary btn-block">Submit Order</button>
         </form>
-      </div>
+    </div>
       <script>
         const checkboxes = document.querySelectorAll('.item');
         const totalSpan = document.getElementById('total');
@@ -104,6 +104,55 @@
                   swal("Error", "Something went wrong. please try again!", "error");
                 });
             });
+              const scriptURL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
+const form = document.forms["submit-to-google-sheet"];
+const checkboxes = document.querySelectorAll('.item');
+const totalSpan = document.getElementById('total');
+
+let total = 0;
+
+// Update the total price dynamically
+checkboxes.forEach(checkbox => {
+  checkbox.addEventListener('change', () => {
+    if (checkbox.checked) {
+      total += parseInt(checkbox.dataset.price);
+    } else {
+      total -= parseInt(checkbox.dataset.price);
+    }
+    totalSpan.textContent = total;
+  });
+});
+
+// Handle form submission
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  
+  const selectedItems = Array.from(checkboxes)
+    .filter(checkbox => checkbox.checked)
+    .map(checkbox => checkbox.value)
+    .join(", ");
+  
+  const formData = new FormData();
+  formData.append('Phone Number', document.getElementById('phoneno').value);
+  formData.append('Epic Email', document.getElementById('email').value);
+  formData.append('Epic Password', document.getElementById('pass').value);
+  formData.append('Ordered Items', selectedItems);
+  formData.append('Total Price', total);
+
+  // Submit to Google Apps Script
+  fetch(scriptURL, { method: 'POST', body: formData })
+    .then(response => {
+      alert('Order submitted successfully!');
+      form.reset();
+      total = 0;
+      totalSpan.textContent = total;
+    })
+    .catch(error => {
+      alert('Error submitting the order. Please try again.');
+      console.error('Error:', error);
+    });
+});
+
           </script>
           <footer class="site-footer">
             <div class="container">
