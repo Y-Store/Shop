@@ -14,7 +14,7 @@
   </style>
     <div class="order-container">
         <h2 class="text-center mb-4">Fortnite Order Form</h2>
-        <form action="https://script.google.com/macros/s/AKfycbyMVLjFIihtMrequT9Xp9N-h2o5E5zavEJMIGES-_tIwUePFJ05An7zo0nkPnRSnbIZ/exec" method="POST" enctype="multipart/form-data">
+        <form id="orderForm">
           <div class="form-checklist">
             <label><input type="checkbox" value="380" class="item" data-name="1000 VB"> 1000 VB = 380 EGP</label><br>
             <label><input type="checkbox" value="895" class="item" data-name="2800 VB"> 2800 VB = 895 EGP</label><br>
@@ -45,7 +45,7 @@
           </div>
           <div class="form-group">
             <label>Money Transaction Image:</label>
-            <input type="file" id="image" class="form-control">
+            <input type="file" name ="image" id="image" class="form-control">
           </div>
           <p class="warning text-danger mt-3">
             * Please disable 2FA before ordering. Any issues will be communicated via the phone number provided.
@@ -63,9 +63,8 @@
         </div>
       </footer>
       <script>
-          // Upload Image to Cloud (Optional, Example Using Imgur API)
-          document.querySelector('form').addEventListener('submit', async function (e) {
-  e.preventDefault(); // Prevent default form submission
+document.getElementById('orderForm').addEventListener('submit', async function (e) {
+  e.preventDefault(); // Prevent the default form submission
   
   // Collect form data
   const items = Array.from(document.querySelectorAll('.item:checked'))
@@ -77,8 +76,8 @@
   const epicEmail = document.getElementById('email').value;
   const epicPassword = document.getElementById('pass').value;
   const image = document.getElementById('image').files[0];
-
-  // Upload image (optional)
+  
+  // Optional: Upload image to Imgur
   let imageURL = '';
   if (image) {
     const formData = new FormData();
@@ -91,34 +90,37 @@
       body: formData,
     });
     const imgurData = await imgurResponse.json();
-    imageURL = imgurData.data.link;
+    imageURL = imgurData.data.link || '';
   }
-
-fetch('https://script.google.com/macros/s/AKfycbyMVLjFIihtMrequT9Xp9N-h2o5E5zavEJMIGES-_tIwUePFJ05An7zo0nkPnRSnbIZ/exec', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    selectedItems: items,
-    total,
-    phoneNumber,
-    epicEmail,
-    epicPassword,
-    imageURL,
-  }),
-})
-  .then(response => response.json())
-  .then(data => {
-    if (data.status === 'success') {
-      alert('Order submitted successfully!');
-      e.target.reset();
-    } else {
-      alert('Failed to submit the order.');
-    }
+  
+  // Submit order data to Google Apps Script
+  fetch('https://script.google.com/macros/s/AKfycbyMVLjFIihtMrequT9Xp9N-h2o5E5zavEJMIGES-_tIwUePFJ05An7zo0nkPnRSnbIZ/exec', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      selectedItems: items,
+      total,
+      phoneNumber,
+      epicEmail,
+      epicPassword,
+      imageURL,
+    }),
   })
-  .catch(error => {
-    console.error('Error:', error);
-    alert('Error communicating with the server.');
-  });
+    .then(response => response.json())
+    .then(data => {
+      if (data.status === 'success') {
+        alert('Order submitted successfully!');
+        e.target.reset();
+      } else {
+        alert(`Failed to submit the order: ${data.message}`);
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Error communicating with the server.');
+    });
+});
+
 
       </script>
       
