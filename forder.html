@@ -116,7 +116,16 @@
     alert('Failed to submit the order.');
   }
 });
-
+fetch('https://script.google.com/macros/s/AKfycbwEty4zGEbS7zZz2XMqvm07vQX5P1HLt_hfBjcMYUyPboRxqDaAgVkVuCa3lWoC_H23/exec', {
+     mode: 'no-cors'
+   })
+   .then(response => {
+     // You cannot access response.json() or response.text() here!
+     console.log("Request complete (but no response body available)");
+   })
+   .catch(error => {
+     console.error('Error:', error);
+   });
       </script>
       
 </body>
