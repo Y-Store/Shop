@@ -91,32 +91,35 @@ document.getElementById('orderForm').addEventListener('submit', async function (
     imageURL = imgurData.data.link || '';
   }
 
-  fetch('https://script.google.com/macros/s/AKfycbyWMz4Q5wQ_Xu9XaNSLCS9FeLClaFswfvPpyATjEctRG9CpOk9WxuMrgviFtrbQWq2C/exec', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      selectedItems: items,
-      total,
-      phoneNumber,
-      epicEmail,
-      epicPassword,
-      imageURL,
-    }),
+fetch('https://script.google.com/macros/s/AKfycbxbFttxxuYgQGiHRb3DMn41u0TgHJV0iiYbEcKkx1hcFa0H17pnGkmgl6OH-GXUgOIH/exec', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    selectedItems: items,
+    total,
+    phoneNumber,
+    epicEmail,
+    epicPassword,
+    imageURL,
+  }),
+})
+  .then(response => {
+    if (!response.ok) throw new Error('Network response was not ok');
+    return response.json();
   })
-    .then(response => response.json())
-    .then(data => {
-      if (data.status === 'success') {
-        alert('Order submitted successfully!');
-        e.target.reset();
-      } else {
-        alert(`Failed to submit the order: ${data.message}`);
-      }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      alert('Error communicating with the server.');
-    });
-});
+  .then(data => {
+    if (data.status === 'success') {
+      alert('Order submitted successfully!');
+      e.target.reset();
+    } else {
+      alert(`Failed to submit the order: ${data.message}`);
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Error communicating with the server.');
+  });
+
 </script>
 
       
