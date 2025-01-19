@@ -458,3 +458,26 @@ a {
 .site-footer p {
   margin: 0; /* Remove default margin */
 }
+.testimonial-section {
+  background-color: #f9f9f9;
+}
+
+.testimonial-box {
+  background: white;
+  border-radius: 8px;
+  transition: transform 0.3s;
+}
+
+.testimonial-box:hover {
+  transform: translateY(-10px);
+}
+
+.testimonial-text {
+  font-style: italic;
+  color: #555;
+}
+
+.testimonial-author {
+  font-weight: bold;
+  color: #333;
+}
